@@ -19,7 +19,6 @@ export async function GET(req) {
   try {
     await connectDB();
 
-    // 1. Authenticate user from the incoming Bearer token
     const user = verifyToken(req);
     if (!user) {
       return NextResponse.json(
@@ -30,7 +29,6 @@ export async function GET(req) {
 
     let bookmarkedVolumes = [];
 
-    // 2. Fetch bookmarks ordered by creation date
     const userBookmarks = await Bookmark.find({ userId: user.id })
       .sort({ createdAt: -1 })
       .lean();
@@ -38,10 +36,8 @@ export async function GET(req) {
     if (userBookmarks.length > 0) {
       const bookIds = userBookmarks.map((b) => b.bookId);
 
-      // 3. Fetch matching book details
       const booksData = await Book.find({ _id: { $in: bookIds } }).lean();
 
-      // 4. Your exact matching and filtering pipeline preserved!
       bookmarkedVolumes = userBookmarks
         .map((b) => booksData.find((book) => book._id.toString() === b.bookId.toString()))
         .filter(Boolean);

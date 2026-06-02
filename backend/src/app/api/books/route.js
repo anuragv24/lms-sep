@@ -19,14 +19,11 @@ export async function GET(req) {
   try {
     await connectDB();
 
-    // 1. Parse the search parameter from the URL string
     const { searchParams } = new URL(req.url);
     const searchQuery = searchParams.get("search") || "";
 
-    // 2. Optional: Identify the user if they passed a Bearer Token
     const decodedUser = verifyToken(req);
 
-    // 3. Execute Book Query
     let books = [];
     if (searchQuery) {
       books = await Book.find(
@@ -39,7 +36,6 @@ export async function GET(req) {
       books = await Book.find({}).sort({ createdAt: -1 }).lean();
     }
 
-    // 4. Execute Bookmark Query if user is authenticated
     let bookmarkedIdList = [];
     if (decodedUser?.id) {
       const userBookmarks = await Bookmark.find({ userId: decodedUser.id }).lean();
@@ -47,11 +43,10 @@ export async function GET(req) {
       bookmarkedIdList = userBookmarks.map(b => b.bookId.toString());
     }
 
-    // 5. Send back the unified payload
     return NextResponse.json({
       success: true,
       books,
-      bookmarkedIdList // Send as an array; frontend can convert back to a Set
+      bookmarkedIdList 
     }, { status: 200, headers: corsHeaders });
 
   } catch (error) {

@@ -11,7 +11,6 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'Content-Type',
 };
 
-// 1. ADD OPTIONS METHOD FOR BROWSER PREFLIGHT CHECKS
 export async function OPTIONS() {
   return new NextResponse(null, { status: 200, headers: corsHeaders });
 }
@@ -58,23 +57,21 @@ export async function POST(req) {
       expiresIn: "1d",
     });
 
-    // 2. FIX: Pass corsHeaders into the success response configuration block
     const response = NextResponse.json(
       {
         success: true,
         message: "Login Successful",
         role: user.role
       }, 
-      { status: 200, headers: corsHeaders } // Added here
+      { status: 200, headers: corsHeaders } 
     );
 
-    // 3. FIX: Changed sameSite from "strict" to "lax" for cross-origin local storage
     response.cookies.set({
       name: "accessToken",
       value: accessToken,
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax", 
+      secure: true,
+      sameSite: "none", 
       maxAge: 60 * 60 * 24 * 1,
       path: "/",
     });
@@ -84,7 +81,6 @@ export async function POST(req) {
   } catch (error) {
     console.log("Error :: Login ", error.message);
     
-    // 4. FIX: Consistent use of NextResponse and included corsHeaders
     return NextResponse.json(
       {
         success: false,

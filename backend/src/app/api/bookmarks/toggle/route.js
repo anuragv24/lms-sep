@@ -18,7 +18,6 @@ export async function POST(req) {
   try {
     await connectDB();
 
-    // 1. Authenticate the request using your Bearer token helper
     const user = verifyToken(req);
     if (!user) {
       return NextResponse.json(
@@ -27,7 +26,6 @@ export async function POST(req) {
       );
     }
 
-    // 2. Extract the target bookId from the request body
     const { bookId } = await req.json();
     if (!bookId) {
       return NextResponse.json(
@@ -36,7 +34,6 @@ export async function POST(req) {
       );
     }
 
-    // 3. Look for an existing bookmark
     const existingBookmark = await Bookmark.findOne({
       userId: user.id,
       bookId: bookId,

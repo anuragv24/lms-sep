@@ -4,7 +4,6 @@ import { verifyToken } from "@/utils/verifyAuth";
 import { v2 as cloudinary } from "cloudinary";
 import Book from "@/models/Book";
 
-// 1. Configure Cloudinary
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
@@ -24,7 +23,6 @@ export async function OPTIONS() {
 
 export async function POST(req) {
   try {
-    // 2. Authenticate the admin user
     const user = verifyToken(req);
     
     if (!user || user.role !== 'admin') {
@@ -34,7 +32,6 @@ export async function POST(req) {
       );
     }
 
-    // 3. Extract data from multipart form stream
     const formData = await req.formData();
     const title = formData.get("title");
     const author = formData.get("author");
@@ -64,7 +61,6 @@ export async function POST(req) {
       }, { status: 400, headers: corsHeaders });
     }
 
-    // 4. Convert PDF file to buffer stream for Cloudinary
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
     
@@ -88,7 +84,6 @@ export async function POST(req) {
       );
     }
 
-    // 5. Convert & upload thumbnail if present
     let thumbnailUrl = null;
     if (thumbnail && thumbnail.size > 0) {
       const imgArrayBuffer = await thumbnail.arrayBuffer();
@@ -111,14 +106,13 @@ export async function POST(req) {
       }
     }
 
-    // 6. Persist database record on Port 5000
     await connectDB();
     const newBook = await Book.create({
       title: title.trim(),
       author: author.trim(),
       description: description?.trim() || "", 
       pdfUrl: uploadResult.secure_url,
-      thumbnailUrl: thumbnailUrl // Standardized mapping name to match your BookCard properties
+      thumbnailUrl: thumbnailUrl 
     });
 
     return NextResponse.json({

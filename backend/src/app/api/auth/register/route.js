@@ -72,7 +72,7 @@ export async function POST(req) {
         success: true,
         message: "User created successfully.",
       },
-      { status: 201, headers: corsHeaders }, // Added headers
+      { status: 201, headers: corsHeaders }, 
     );
   } catch (error) {
     console.log("Error :: signup ", error.message);
@@ -81,7 +81,7 @@ export async function POST(req) {
         success: false,
         message: "Internal server error",
       },
-      { status: 500, headers: corsHeaders }, // Added headers
+      { status: 500, headers: corsHeaders }, 
     );
   }
 }

@@ -21,6 +21,6 @@ export async function GET(req) {
 
   return NextResponse.json({
     success: true,
-    user: decoded // Contains id, name, email, role from your payload
+    user: decoded 
   }, { status: 200, headers: corsHeaders });
 }
