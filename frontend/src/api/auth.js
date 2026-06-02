@@ -30,6 +30,7 @@ export async function registerUser(name, email, password) {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name, email, password }),
+      credentials: "include",
     });
 
     const data = await res.json();

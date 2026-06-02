@@ -3,13 +3,11 @@ import { NextResponse } from "next/server";
 export async function middleware(request) {
   const { pathname } = request.nextUrl;
 
-  // 1. Grab the token string from the frontend cookies
   const sessionToken = request.cookies.get("accessToken")?.value;
 
   let isTokenValid = false;
   let userPayload = null;
 
-  // 2. Handshake with Backend Port 5000 to check validity
   if (sessionToken) {
     try {
       const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";

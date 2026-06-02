@@ -5,6 +5,7 @@ import { Search, Compass, BookX, AlertTriangle, RefreshCw } from "lucide-react";
 import { cookies } from "next/headers";
 
 export default async function Books({ searchParams }) {
+  console.log("book page")
   const params = await searchParams;
   const searchQuery = params.search || "";
 

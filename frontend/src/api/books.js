@@ -20,6 +20,7 @@ export async function getBooksAndBookmarks(searchQuery = "", token) {
         "Content-Type": "application/json",
       },
       cache: "no-store",
+      credentials: "include",
     });
 
     const data = await res.json();
