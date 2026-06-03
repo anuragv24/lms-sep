@@ -40,10 +40,11 @@ import { loginUser } from "@/api/auth";
 setLoading(false);
 
     if (!result.success) {
-      setError(result.message);
+      setError(result.message);g
       
     } else {
-     
+     localStorage.setItem("token", result.data.token);
+  localStorage.setItem("user", JSON.stringify(result.data.user));
       // router.push("/books");
       // router.refresh();
       window.location.href = "/books";

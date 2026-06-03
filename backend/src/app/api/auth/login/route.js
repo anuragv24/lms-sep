@@ -62,7 +62,12 @@ export async function POST(req) {
       {
         success: true,
         message: "Login Successful",
-        role: user.role
+        token: accessToken,
+        user: {
+    id: user._id,
+    email: user.email,
+    role: user.role
+  }
       }, 
       { status: 200, headers: corsHeaders } 
     );

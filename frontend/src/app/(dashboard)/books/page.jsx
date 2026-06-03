@@ -13,7 +13,7 @@ export default async function Books({ searchParams }) {
   const token = cookieStore.get("accessToken")?.value || "";
 
   
-  const user = await getAuthenticatedUser();
+  const user = await getAuthenticatedUser(token);
 
   const result = await getBooksAndBookmarks(searchQuery, token);
 

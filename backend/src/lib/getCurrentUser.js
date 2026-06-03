@@ -1,20 +1,31 @@
-import { jwtVerify } from "jose"
-import { cookies } from "next/headers"
+// frontend/src/api/user.js
+import { cookies } from "next/headers";
 
+export async function getAuthenticatedUser(passedToken = null) {
+  try {
+    let token = passedToken;
 
-
-export default async function getAuthenticatedUser(){
-    const cookieStore = await cookies()
-    const token = cookieStore.get("accessToken")?.value;
-    if(!token){
-        return null;
+    // If no token was passed from a server component, check cookies locally
+    if (!token && typeof window === "undefined") {
+      const cookieStore = await cookies();
+      token = cookieStore.get("accessToken")?.value;
     }
 
-    try {
-        const secretKey = new TextEncoder().encode(process.env.JWT_SECRET);
-        const {payload} = await jwtVerify(token, secretKey);
-        return payload;
-    } catch (error) {
-        return null;
-    }
+    if (!token) return null;
+
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/me`, {
+      method: "GET",
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      cache: "no-store",
+    });
+
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data.user;
+  } catch (error) {
+    return null;
+  }
 }
