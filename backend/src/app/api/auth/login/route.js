@@ -16,6 +16,7 @@ export async function OPTIONS() {
 }
 
 export async function POST(req) {
+  console.log("Inside login page")
   try {
     const body = await req.json();
     const { email, password } = body;

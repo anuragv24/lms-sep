@@ -43,8 +43,9 @@ setLoading(false);
       setError(result.message);
       
     } else {
-      router.refresh();
+     
       router.push("/books");
+      router.refresh();
     }
   }
 
