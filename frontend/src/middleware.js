@@ -8,23 +8,33 @@ export async function middleware(request) {
   let isTokenValid = false;
   let userPayload = null;
 
+  
+
   if (sessionToken) {
     try {
-      const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+
       
-      const res = await fetch(`${BACKEND_URL}/api/auth/me`, {
-        method: "GET",
-        headers: {
-          "Authorization": `Bearer ${sessionToken}`,
-          "Content-Type": "application/json",
-        },
-        cache: "no-store", // CRUCIAL: Do not cache token evaluation states!
-      });
+      const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+
+      const cacheBuster = Date.now();
+      const verificationUrl = `${BACKEND_URL}/api/auth/me?cb=${cacheBuster}`;
+      
+      const res = await fetch(verificationUrl, {
+      method: "GET",
+      headers: {
+        "Authorization": `Bearer ${sessionToken}`,
+        "Content-Type": "application/json",
+      },
+      cache: "no-store", 
+    });
 
       if (res.ok) {
         const data = await res.json();
         isTokenValid = true;
         userPayload = data.user; // Contains id, email, role, etc.
+      }else {
+        console.log(`Backend rejected token string with status code: ${res.status}`);
+      isTokenValid = false;
       }
     } catch (error) {
       console.error("Middleware Auth Verification Handshake Failed:", error.message);
@@ -46,6 +56,7 @@ export async function middleware(request) {
 
   // 🔴 CASE A: User is trying to access restricted areas without a valid token
   if ((isDashboardRoute || isAdminRoute) && !isTokenValid) {
+
     const response = NextResponse.redirect(new URL("/login", request.url));
     // Clear out corrupted or expired token strings
     if (sessionToken) response.cookies.delete("accessToken");
