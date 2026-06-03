@@ -43,6 +43,9 @@ setLoading(false);
       setError(result.message);g
       
     } else {
+const token = result.data.token;
+      document.cookie = `accessToken=${token}; path=/; max-age=${60 * 60 * 24}; SameSite=Lax; Secure`;
+
      localStorage.setItem("token", result.data.token);
   localStorage.setItem("user", JSON.stringify(result.data.user));
       // router.push("/books");
