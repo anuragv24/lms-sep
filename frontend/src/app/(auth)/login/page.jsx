@@ -44,8 +44,9 @@ setLoading(false);
       
     } else {
      
-      router.push("/books");
-      router.refresh();
+      // router.push("/books");
+      // router.refresh();
+      window.location.href = "/books";
     }
   }
 

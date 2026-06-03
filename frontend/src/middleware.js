@@ -8,12 +8,9 @@ export async function middleware(request) {
   let isTokenValid = false;
   let userPayload = null;
 
-  
-
   if (sessionToken) {
     try {
 
-      
       const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
       const cacheBuster = Date.now();
