@@ -32,7 +32,6 @@ export async function getBookmarkedVolumes(token) {
   try {
     if (!token) return { success: false, message: "No active user session found." };
 
-    // 2. Query your backend server endpoint
     const res = await fetch(`${API_BASE_URL}/api/bookmarks`, {
       method: "GET",
       headers: {

@@ -1,21 +1,18 @@
 import React from 'react';
 import BookCard from '@/components/BookCard';
 import { Bookmark as BookmarkIcon, FolderHeart } from 'lucide-react';
-import { getAuthenticatedUser } from '@/api/user'; // Swapped to decoupled user util
-import { getBookmarkedVolumes } from '@/api/bookmarks'; // Swapped to decoupled bookmarks api service
+import { getAuthenticatedUser } from '@/api/user'; 
+import { getBookmarkedVolumes } from '@/api/bookmarks'; 
 import { cookies } from 'next/headers';
 
 export default async function BookmarksPage() {
-  // 1. Fetch user identity context from frontend server sessions
   const user = await getAuthenticatedUser();
 
   const cookieStore = await cookies();
   const token = cookieStore.get("accessToken")?.value || "";
 
-  // 2. Load the aggregated and ordered dataset from backend port 5000
   const result = await getBookmarkedVolumes(token);
 
-  // 3. Keep your original component state properties intact
   const errorState = !result.success;
   const bookmarkedVolumes = result.bookmarkedVolumes || [];
 
@@ -45,8 +42,8 @@ export default async function BookmarksPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 pt-2">
           {bookmarkedVolumes.map((book) => (
             <BookCard
-              key={book._id} // Removed .toString(), network sends it clean!
-              book={book}    // Removed JSON.parse(JSON.stringify()) wrap!
+              key={book._id} 
+              book={book}    
               isBookmarked={true} 
               currentUser={user}
               token={token}

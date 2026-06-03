@@ -11,17 +11,14 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'Content-Type, Authorization',
 };
 
-// Handle browser preflight checks
 export async function OPTIONS() {
   return new NextResponse(null, { status: 200, headers: corsHeaders });
 }
 
-// The core DELETE method
 export async function DELETE(req, { params }) {
   try {
     await connectDB();
 
-    // 1. Authenticate the user calling the endpoint
     const user = verifyToken(req);
     if (!user) {
       return NextResponse.json(
@@ -30,7 +27,6 @@ export async function DELETE(req, { params }) {
       );
     }
 
-    // 2. Strict Role Check: Only let admins perform deletions
     if (user.role !== "admin") {
       return NextResponse.json(
         { success: false, message: "Forbidden: Only administrators can delete assets." },
@@ -38,9 +34,7 @@ export async function DELETE(req, { params }) {
       );
     }
 
-    // 3. Extract the book ID from the dynamic URL params wrapper
-    // In Next.js App Router, dynamic segments must be awaited if using newer versions,
-    // but destructuring them directly or awaiting is safe practice.
+   
     const resolvedParams = await params;
     const bookId = resolvedParams.id;
 
@@ -51,7 +45,6 @@ export async function DELETE(req, { params }) {
       );
     }
 
-    // 4. Perform the deletion cascade
     const deletedBook = await Book.findByIdAndDelete(bookId);
 
     if (!deletedBook) {
@@ -61,7 +54,6 @@ export async function DELETE(req, { params }) {
       );
     }
 
-    // Clean up any stray bookmarks pointing to the deleted book
     await Bookmark.deleteMany({ bookId: bookId });
 
     return NextResponse.json(
@@ -83,7 +75,6 @@ export async function GET(req, { params }) {
   try {
     await connectDB();
 
-    // 1. Authenticate the reading user via their Bearer passport token
     const user = verifyToken(req);
     if (!user) {
       return NextResponse.json(
@@ -92,7 +83,6 @@ export async function GET(req, { params }) {
       );
     }
 
-    // 2. Resolve dynamic parameters to pull the book ID from URL context
     const resolvedParams = await params;
     const bookId = resolvedParams.id;
 
@@ -103,7 +93,6 @@ export async function GET(req, { params }) {
       );
     }
 
-    // 3. Query the single book resource document
     const book = await Book.findById(bookId).lean();
 
     if (!book) {

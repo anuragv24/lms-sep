@@ -4,8 +4,8 @@ import React, { useState } from "react";
 import { Trash2, Loader2, Bookmark, BookOpen, User } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { toggleBookmark } from "@/api/bookmarks"; // Import our clean bookmark service
-import { deleteBook } from "@/api/books";         // Import our clean delete service
+import { toggleBookmark } from "@/api/bookmarks"; 
+import { deleteBook } from "@/api/books";         
 
 export default function BookCard({
   book,
@@ -35,12 +35,11 @@ export default function BookCard({
         alert(result.message);
         setIsDeleting(false);
       } else {
-        router.refresh(); // Refresh screen to sync removed card state
+        router.refresh(); 
       }
     }
   }
 
-  // 2. HANDLED: Decoupled Bookmark Toggle Logic
   async function handleBookmarkClick(e) {
     e.preventDefault();
     if (!currentUser) {
@@ -54,7 +53,7 @@ export default function BookCard({
     const result = await toggleBookmark(_id, token);
 
     if (result.success) {
-      router.refresh(); // Refreshes server components to display fresh bookmark state instantly
+      router.refresh(); 
     } else {
       alert(result.message);
     }

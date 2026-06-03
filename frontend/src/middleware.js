@@ -28,7 +28,7 @@ export async function middleware(request) {
       if (res.ok) {
         const data = await res.json();
         isTokenValid = true;
-        userPayload = data.user; // Contains id, email, role, etc.
+        userPayload = data.user; 
       }else {
         console.log(`Backend rejected token string with status code: ${res.status}`);
       isTokenValid = false;
@@ -39,7 +39,6 @@ export async function middleware(request) {
     }
   }
 
-  // 3. Keep all your beautiful route categorization boundaries exactly as they were!
   const isDashboardRoute =
     pathname.startsWith("/books") ||
     pathname.startsWith("/bookmarks") ||
@@ -51,21 +50,17 @@ export async function middleware(request) {
   const isAuthRoute =
     pathname.startsWith("/login") || pathname.startsWith("/register");
 
-  // 🔴 CASE A: User is trying to access restricted areas without a valid token
   if ((isDashboardRoute || isAdminRoute) && !isTokenValid) {
 
     const response = NextResponse.redirect(new URL("/login", request.url));
-    // Clear out corrupted or expired token strings
     if (sessionToken) response.cookies.delete("accessToken");
     return response;
   }
 
-  // 🔴 CASE B: User is authenticated but lacks admin credentials for admin modules
   if (isAdminRoute && isTokenValid && userPayload?.role !== "admin") {
     return NextResponse.redirect(new URL("/books", request.url));
   }
 
-  // 🟢 CASE C: User is already logged in but tries to visit /login or /register
   if (isAuthRoute && isTokenValid) {
     return NextResponse.redirect(new URL("/books", request.url));
   }
@@ -73,7 +68,6 @@ export async function middleware(request) {
   return NextResponse.next();
 }
 
-// Keeping your matcher rules perfectly intact
 export const config = {
   matcher: [
     "/books/:path*",

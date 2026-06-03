@@ -3,15 +3,14 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { PlusCircle, FileText, User, Type, FileUp, Loader2, CheckCircle2, AlertCircle, Image } from "lucide-react";
-import { uploadBook } from "@/api/books"; // Import our clean network utility module
+import { uploadBook } from "@/api/books"; 
 
 export default function UploadComp({token}) {
-  const [loading, setLoading] = useState(false); // Fixed typo from 'setLoadin'
+  const [loading, setLoading] = useState(false); 
   const [uploadedUrl, setUploadedUrl] = useState(null);
   const [error, setError] = useState(null);
   const router = useRouter();
 
-  // Helper utility to safely extract browser tokens
   async function handleFormSubmit(e) {
     e.preventDefault();
     setLoading(true);
@@ -20,7 +19,6 @@ export default function UploadComp({token}) {
 
     const formData = new FormData(e.target);
 
-    // Send multi-part data payload directly across ports to port 5000
     const result = await uploadBook(formData, token);
 
     setLoading(false);

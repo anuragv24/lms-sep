@@ -5,14 +5,12 @@ export async function getBooksAndBookmarks(searchQuery = "", token) {
   try {
     
 
-    // 2. Build URL safely containing the search parameter
     const url = new URL(`${API_BASE_URL}/api/books`);
     
     if (searchQuery) {
       url.searchParams.append("search", searchQuery);
     }
 
-    // 3. Run server-to-server request
     const res = await fetch(url.toString(), {
       method: "GET",
       headers: {
@@ -32,7 +30,6 @@ export async function getBooksAndBookmarks(searchQuery = "", token) {
     return {
       success: true,
       books: data.books,
-      // Convert the incoming array back to a fast Set layout for your UI lookups
       bookmarkedIdSet: new Set(data.bookmarkedIdList) 
     };
 
@@ -70,11 +67,10 @@ export async function uploadBook(formData, frontendCookieToken) {
     const res = await fetch(`${API_BASE_URL}/api/books/upload`, {
       method: "POST",
       headers: {
-        // We only pass the Authorization passport header.
-        // The browser automatically sets Content-Type to multipart/form-data for FormData payloads!
+        
         "Authorization": `Bearer ${frontendCookieToken}`,
       },
-      body: formData, // Passing the raw multi-part binary data payload directly
+      body: formData, 
     });
 
     const data = await res.json();

@@ -11,16 +11,13 @@ export default async function ProtectedPDFReaderPage({ params }) {
 
   const cookieStore = await cookies();
   const token = cookieStore.get("accessToken")?.value || "";
-  // 1. Fetch data from your backend service layer instead of direct Mongoose query
   const result = await getSingleBook(bookId, token);
 
-  // 2. Trigger native 404 layout if the backend returns a 404 status
   if (!result.success) {
     if (result.status === 404) {
       return notFound();
     }
     
-    // Fallback UI error element
     return (
       <div className="h-screen w-screen flex flex-col items-center justify-center bg-zinc-950 text-zinc-200 p-6">
         <p className="text-sm font-mono text-red-400">Failed to stream document data nodes securely.</p>

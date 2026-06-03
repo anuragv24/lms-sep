@@ -1,11 +1,9 @@
-// frontend/src/api/user.js
 import { cookies } from "next/headers";
 
 export async function getAuthenticatedUser(passedToken = null) {
   try {
     let token = passedToken;
 
-    // If no token was passed from a server component, check cookies locally
     if (!token && typeof window === "undefined") {
       const cookieStore = await cookies();
       token = cookieStore.get("accessToken")?.value;

@@ -1,4 +1,3 @@
-// src/api/auth.js
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -8,7 +7,7 @@ export async function loginUser(email, password) {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
-      credentials: "include", // Essential for cross-origin cookies!
+      credentials: "include", 
     });
 
     const data = await res.json();
@@ -49,7 +48,7 @@ export async function logoutUser() {
   try {
     const res = await fetch(`${API_BASE_URL}/api/auth/logout`, {
       method: "POST",
-      credentials: "include", // 🌟 Crucial: Passes the cookie context to let the server clear it
+      credentials: "include", 
     });
 
     const data = await res.json();
