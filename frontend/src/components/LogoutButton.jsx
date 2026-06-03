@@ -13,6 +13,8 @@ export default  function LogoutButton({ isMobile = false }) {
   async function handleLogout() {
     setLoading(true);
 
+
+
     const result = await logoutUser();
 
     setLoading(false);
@@ -23,6 +25,7 @@ export default  function LogoutButton({ isMobile = false }) {
     } else {
       alert(result.message);
     }
+    document.cookie = "accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC; SameSite=Lax; Secure";
   }
 
   return (
