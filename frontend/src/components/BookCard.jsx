@@ -48,7 +48,6 @@ export default function BookCard({
     }
 
     setIsBookmarking(true);
-    console.log("token from bookcard :: ", token)
 
     const result = await toggleBookmark(_id, token);
 
