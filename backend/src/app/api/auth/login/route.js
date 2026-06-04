@@ -7,7 +7,7 @@ import jwt from "jsonwebtoken";
 const corsHeaders = {
   'Access-Control-Allow-Origin':  process.env.FRONTEND_URL || 'http://localhost:3000', 
   'Access-Control-Allow-Credentials': 'true',             
-  'Access-Control-Allow-Methods': 'POST, OPTIONS', // Make sure OPTIONS is here
+  'Access-Control-Allow-Methods': 'POST, OPTIONS', 
   'Access-Control-Allow-Headers': 'Content-Type',
 };
 
@@ -16,7 +16,6 @@ export async function OPTIONS() {
 }
 
 export async function POST(req) {
-  console.log("Inside login page")
   try {
     const body = await req.json();
     const { email, password } = body;

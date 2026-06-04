@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { registerUser } from "@/api/auth";
+import GoogleAuthButton from "@/components/GoogleAuthButton";
 
 export default function Register() {
   const router = useRouter();
@@ -146,6 +147,8 @@ export default function Register() {
             )}
           </button>
         </form>
+
+        <GoogleAuthButton />
 
         <div className="mt-6 text-center">
           <p className="text-xs text-zinc-500">

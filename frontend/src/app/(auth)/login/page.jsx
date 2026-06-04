@@ -15,6 +15,7 @@ import Link from "next/link";
 
 import { useSearchParams } from "next/navigation";
 import { loginUser } from "@/api/auth";
+import GoogleAuthButton from "@/components/GoogleAuthButton";
 
  function LoginPage() {
 
@@ -147,6 +148,8 @@ const token = result.data.token;
             )}
           </button>
         </form>
+
+        <GoogleAuthButton />
 
         <div className="mt-6 text-center">
           <p className="text-xs text-zinc-500">

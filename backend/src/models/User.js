@@ -16,7 +16,9 @@ const UserSchema = new Schema({
 
     password: {
         type: String,
-        required: true,
+        required: function() {
+            return this.authProvider === 'local';
+        },
     },
 
     role: { 
@@ -24,6 +26,12 @@ const UserSchema = new Schema({
     enum: ['user', 'admin'], 
     default: 'user' 
   },
+
+  authProvider: {
+        type: String,
+        enum: ['local', 'google'],
+        default: 'local' 
+    }
 }, {timestamps: true});
 
 const User = models.User || model('User', UserSchema);

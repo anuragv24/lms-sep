@@ -49,3 +49,6 @@ Thumbs.db
 # Next.js Experimental features (Telemetry, Turbopack caches)
 **/.next-turbo/
 **/.lighthouse/
+
+
+**/firebase-service-account.json
