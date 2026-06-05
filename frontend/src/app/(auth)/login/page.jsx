@@ -41,7 +41,7 @@ import GoogleAuthButton from "@/components/GoogleAuthButton";
 setLoading(false);
 
     if (!result.success) {
-      setError(result.message);g
+      setError(result.message);
       
     } else {
 const token = result.data.token;
