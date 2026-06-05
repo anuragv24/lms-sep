@@ -37,6 +37,13 @@ export async function POST(req) {
       );
     }
 
+    if(user.authProvider === 'google' && !user.password ){
+        return NextResponse.json({
+          success: false,
+          message: "This account is linked with Google Sign-In. Please log in using Google."
+        }, {status: 400, headers: corsHeaders})
+    }
+
     const isPasswordCorrect = await bcrypt.compare(password, user.password);
 
     if (!isPasswordCorrect) {
