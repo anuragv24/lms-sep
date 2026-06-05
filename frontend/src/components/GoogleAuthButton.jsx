@@ -29,12 +29,14 @@ export default function GoogleAuthButton() {
       const firebaseIdToken = await result.user.getIdToken();
 
       const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+
       const response = await axios.post(`${API_BASE_URL}/api/auth/google`, {}, {
         headers: { 
           "Content-Type": "application/json",
           "Authorization": `Bearer ${firebaseIdToken}` 
         }
       });
+      
       if (response.data.success ) {
         const token = response.data.token;
         document.cookie = `accessToken=${token}; path=/; max-age=${60 * 60 * 24}; SameSite=Lax; Secure`;
