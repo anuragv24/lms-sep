@@ -92,26 +92,33 @@ export default function Sidebar({ currentUser, isMobile = false }) {
 
   
       <div className="pt-4 border-t border-zinc-900 mt-auto relative group/footer min-h-[64px] flex items-center">
-        
-        <div className="flex items-center gap-3 px-2 w-full transition-all duration-300 group-hover/footer:opacity-0 group-hover/footer:translate-y-2 pointer-events-auto group-hover/footer:pointer-events-none">
-          <div className="w-9 h-9 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-400 shadow-md">
-           {currentUser.profilePic ? (
-            <img src={currentUser?.profilePic} alt="Preview" className="w-full h-full object-cover" />
-            ) : ("")} 
-          </div>
-          <div className="min-w-0 flex-1">
-            <p className="text-xs font-semibold text-zinc-200 truncate">
-              {currentUser?.name || "Reader Account"}
-            </p>
-            
-          </div>
-        </div>
-
-        <div className="absolute inset-x-0 bottom-0 top-4 opacity-0 translate-y-[-8px] transition-all duration-300 group-hover/footer:opacity-100 group-hover/footer:translate-y-0 pointer-events-none group-hover/footer:pointer-events-auto">
-          <LogoutButton />
-        </div>
-
+  
+  {/* User Info: Hidden on desktop hover, but ALWAYS visible on mobile */}
+  <div className="flex items-center gap-3 px-2 w-full transition-all duration-300 md:group-hover/footer:opacity-0 md:group-hover/footer:translate-y-2 pointer-events-auto md:group-hover/footer:pointer-events-none">
+    <div className="w-9 h-9 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-400 shadow-md">
+      {currentUser.profilePic ? (
+        <img src={currentUser?.profilePic} alt="Preview" className="w-full h-full object-cover" />
+      ) : (
+        <User size={16} />
+      )} 
+    </div>
+    <div className="min-w-0 flex-1 flex items-center justify-between">
+      <p className="text-xs font-semibold text-zinc-200 truncate">
+        {currentUser?.name || "Reader Account"}
+      </p>
+      {/* Inline Logout button just for mobile screens */}
+      <div className="block md:hidden">
+        <LogoutButton />
       </div>
+    </div>
+  </div>
+
+  {/* Desktop Hover Logout: Hidden on mobile, absolutely positioned on desktop */}
+  <div className="hidden md:block absolute inset-x-0 bottom-0 top-4 opacity-0 translate-y-[-8px] transition-all duration-300 group-hover/footer:opacity-100 group-hover/footer:translate-y-0 pointer-events-none group-hover/footer:pointer-events-auto">
+    <LogoutButton />
+  </div>
+
+</div>
 
     </aside>
   );
