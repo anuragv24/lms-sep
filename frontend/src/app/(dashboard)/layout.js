@@ -1,6 +1,8 @@
 import { getAuthenticatedUser } from '@/api/user';
 import DashboardWrapper from '@/components/DashboardWrapper';
 
+export const dynamic = 'force-dynamic';
+
 export default async function DashboardLayout({ children }) {
   let currentUser ;
 

@@ -1,5 +1,6 @@
 import { getUpdatedUser } from "@/api/profile";
 import ProfileComp from "@/components/ProfileComp";
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 export const metadata = {
@@ -8,6 +9,8 @@ export const metadata = {
 
 export default async function ProfilePage() {
   let currentUser = null;
+  const cookieStore = await cookies();
+  const token = cookieStore.get("accessToken")?.value || "";
 
   try {
     currentUser = await getUpdatedUser()
@@ -20,7 +23,7 @@ export default async function ProfilePage() {
     redirect("/login")
   }
   return (
-    <ProfileComp currentUser={currentUser} />
+    <ProfileComp currentUser={currentUser} token={token} />
   );
 }
 

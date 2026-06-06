@@ -8,6 +8,7 @@ import LogoutButton from "./LogoutButton";
 
 export default function Sidebar({ currentUser, isMobile = false }) {
   const pathname = usePathname();
+  console.log("current user  :: ", currentUser)
 
   const navItems = [
     { label: "Explore Books", path: "/books", icon: Compass },
@@ -94,7 +95,9 @@ export default function Sidebar({ currentUser, isMobile = false }) {
         
         <div className="flex items-center gap-3 px-2 w-full transition-all duration-300 group-hover/footer:opacity-0 group-hover/footer:translate-y-2 pointer-events-auto group-hover/footer:pointer-events-none">
           <div className="w-9 h-9 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-400 shadow-md">
-            <User size={16} />
+           {currentUser.profilePic ? (
+            <img src={currentUser?.profilePic} alt="Preview" className="w-full h-full object-cover" />
+            ) : ("")} 
           </div>
           <div className="min-w-0 flex-1">
             <p className="text-xs font-semibold text-zinc-200 truncate">

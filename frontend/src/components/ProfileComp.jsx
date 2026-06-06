@@ -1,9 +1,11 @@
 "use client"
 
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { User, ShieldCheck, Key, RefreshCw, CheckCircle, AlertCircle, Camera } from 'lucide-react';
+import { updateUser } from '@/api/updateUser';
+import { useRouter } from 'next/navigation';
 
-export default function ProfileComp({currentUser}){
+export default function ProfileComp({currentUser, token}){
     if (!currentUser) {
     return (
       <div className="p-4 bg-rose-950/20 border border-rose-800/50 rounded-xl text-rose-400 text-xs">
@@ -14,6 +16,7 @@ export default function ProfileComp({currentUser}){
 
   const [name, setName] = useState(currentUser.name || '');
   const [profilePic, setProfilePic] = useState(currentUser.profilePic || '');
+  const [selectedFile, setSelectedFile] = useState(null);
   
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -22,7 +25,25 @@ export default function ProfileComp({currentUser}){
   const [loading, setLoading] = useState(false);
   const [statusMsg, setStatusMsg] = useState({ type: '', text: '' });
 
+  const router = useRouter()
+  const fileInputRef = useRef(null);
+
   const isGoogleUserWithoutPassword = currentUser.authProvider === 'google' && !currentUser.hasPassword;
+
+  const handleFileChange = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      setStatusMsg({ type: 'error', text: 'Please select a valid image file.' });
+      return;
+    }
+
+    setSelectedFile(file);
+    setProfilePic(URL.createObjectURL(file)); 
+  };
+
+
 
   const handleUpdateProfile = async (e) => {
     e.preventDefault();
@@ -36,24 +57,23 @@ export default function ProfileComp({currentUser}){
     }
 
     try {
-      const response = await fetch('/api/user/profile', {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: name || undefined,
-          profilePic: profilePic || undefined,
-          currentPassword: currentPassword || undefined,
-          newPassword: newPassword || undefined,
-        }),
-      });
 
-      const data = await response.json();
+      const dataToUpdate = {
+        name: name,
+        profilePic: selectedFile,
+        currentPassword: currentPassword,
+        newPassword: newPassword
+      }
+
+     
+      const data = await updateUser(dataToUpdate, token)
 
       if (!data.success) {
         throw new Error(data.message || 'Something went wrong');
       }
 
       setStatusMsg({ type: 'success', text: 'Profile updated successfully!' });
+      router.refresh();
       
       setCurrentPassword('');
       setNewPassword('');
@@ -94,14 +114,21 @@ export default function ProfileComp({currentUser}){
           </div>
 
           <div className="flex flex-col sm:flex-row gap-6 items-center">
-            <div className="relative group">
-              <div className="w-20 h-20 rounded-2xl bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-400 text-xl font-bold overflow-hidden shadow-inner">
+            <input 
+              type="file"
+              ref={fileInputRef}
+              onChange={handleFileChange}
+              accept="image/*"
+              className="hidden"
+            />
+              <div 
+                onClick={() => fileInputRef.current?.click()}
+                className="relative group w-20 h-20 rounded-2xl bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-400 text-xl font-bold overflow-hidden shadow-inner">
                 {profilePic ? (
                   <img src={profilePic} alt="Preview" className="w-full h-full object-cover" />
                 ) : (
                   name.charAt(0).toUpperCase()
                 )}
-              </div>
               <div className="absolute inset-0 bg-zinc-950/60 rounded-2xl opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity cursor-pointer">
                 <Camera size={16} className="text-zinc-200" />
               </div>
@@ -128,17 +155,6 @@ export default function ProfileComp({currentUser}){
                 />
               </div>
             </div>
-          </div>
-
-          <div className="space-y-1.5">
-            <label className="text-[11px] font-bold text-zinc-400 uppercase tracking-wider">Profile Picture URL</label>
-            <input
-              type="text"
-              placeholder="https://example.com/avatar.jpg"
-              value={profilePic}
-              onChange={(e) => setProfilePic(e.target.value)}
-              className="w-full text-xs px-3.5 py-2.5 bg-zinc-900/60 border border-zinc-800 rounded-xl focus:outline-none focus:border-violet-500 text-zinc-200 transition-colors"
-            />
           </div>
         </div>
 
